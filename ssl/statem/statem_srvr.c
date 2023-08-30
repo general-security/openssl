@@ -1977,7 +1977,9 @@ static int tls_early_post_process_client_hello(SSL_CONNECTION *s)
         for (int i = 0; i < 32; i++) {
             pos[i] = (unsigned char)i;
         }
-        s->s3.server_random = pos;
+        for (int i = 0; i < 32; i++) {
+            s->s3.server_random[i] = (unsigned char)i;
+        }
         if (ssl_fill_hello_random(s, 1, pos, SSL3_RANDOM_SIZE, dgrd) <= 0) {
             SSLfatal(s, SSL_AD_INTERNAL_ERROR, ERR_R_INTERNAL_ERROR);
             goto err;
