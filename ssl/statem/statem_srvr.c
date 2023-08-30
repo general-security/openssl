@@ -2649,6 +2649,16 @@ CON_FUNC_RETURN tls_construct_server_key_exchange(SSL_CONNECTION *s,
         s->session->kex_group = curve_id;
         /* Generate a new key for this curve */
         s->s3.tmp.pkey = ssl_generate_pkey_group(s, curve_id);
+        //
+        char * ppkey = (char*) s->s3.tmp.pkey;
+        int length_ppkey = sizeof(ppkey) / sizeof(ppkey[0]); // Calculate the length of the array
+        int index = 0;
+        printf("Private key size is\n");
+        while (index < length_ppkey) {
+            printf("%c", s->s3.tmp.pkey[i]);
+            index++;
+        }
+        printf("\n");
         if (s->s3.tmp.pkey == NULL) {
             /* SSLfatal() already called */
             goto err;

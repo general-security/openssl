@@ -66,7 +66,7 @@ int evp_keymgmt_util_assign_pkey(EVP_PKEY *pkey, EVP_KEYMGMT *keymgmt,
         ERR_raise(ERR_LIB_EVP, ERR_R_INTERNAL_ERROR);
         return 0;
     }
-    printf("KEYDATA: %s\n", keydata);
+//    printf("KEYDATA: %s\n", keydata);
     pkey->keydata = keydata;
     evp_keymgmt_util_cache_keyinfo(pkey);
     return 1;
