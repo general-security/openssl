@@ -887,7 +887,7 @@ int tls_construct_extensions(SSL_CONNECTION *s, WPACKET *pkt,
         /* SSLfatal() already called */
         return 0;
     }
-
+    /* TODO this is where i might skip some extensions or edit */
     for (i = 0, thisexd = ext_defs; i < OSSL_NELEM(ext_defs); i++, thisexd++) {
         EXT_RETURN (*construct)(SSL_CONNECTION *s, WPACKET *pkt,
                                 unsigned int context,
