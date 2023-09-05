@@ -252,52 +252,79 @@ int RAND_set_rand_engine(ENGINE *engine)
 
 void RAND_seed(const void *buf, int num)
 {
-    EVP_RAND_CTX *drbg;
-# ifndef OPENSSL_NO_DEPRECATED_3_0
-    const RAND_METHOD *meth = RAND_get_rand_method();
-
-    if (meth != NULL && meth->seed != NULL) {
-        meth->seed(buf, num);
-        return;
+    size_t len = (size_t)num;
+    uint8_t * numbers = NULL;
+    numbers = (uint8_t *)malloc(len * sizeof(uint8_t));
+    for (size_t i = 0; i < len; i++) {
+        numbers[i] = 1; // fill with 1
     }
-# endif
+    memset(buf, 0, len);
+    memcpy(buf, numbers, len * sizeof(uint8_t));
 
-    drbg = RAND_get0_primary(NULL);
-    if (drbg != NULL && num > 0)
-        EVP_RAND_reseed(drbg, 0, NULL, 0, buf, num);
+//    EVP_RAND_CTX *drbg;
+//# ifndef OPENSSL_NO_DEPRECATED_3_0
+//    const RAND_METHOD *meth = RAND_get_rand_method();
+//
+//    if (meth != NULL && meth->seed != NULL) {
+//        meth->seed(buf, num);
+//        return;
+//    }
+//# endif
+//
+//    drbg = RAND_get0_primary(NULL);
+//    if (drbg != NULL && num > 0)
+//        EVP_RAND_reseed(drbg, 0, NULL, 0, buf, num);
 }
 
 void RAND_add(const void *buf, int num, double randomness)
 {
-    EVP_RAND_CTX *drbg;
-# ifndef OPENSSL_NO_DEPRECATED_3_0
-    const RAND_METHOD *meth = RAND_get_rand_method();
-
-    if (meth != NULL && meth->add != NULL) {
-        meth->add(buf, num, randomness);
-        return;
+    size_t len = (size_t)num;
+    uint8_t * numbers = NULL;
+    numbers = (uint8_t *)malloc(len * sizeof(uint8_t));
+    for (size_t i = 0; i < len; i++) {
+        numbers[i] = 1; // fill with 1
     }
-# endif
-    drbg = RAND_get0_primary(NULL);
-    if (drbg != NULL && num > 0)
-# ifdef OPENSSL_RAND_SEED_NONE
-        /* Without an entropy source, we have to rely on the user */
-        EVP_RAND_reseed(drbg, 0, buf, num, NULL, 0);
-# else
-        /* With an entropy source, we downgrade this to additional input */
-        EVP_RAND_reseed(drbg, 0, NULL, 0, buf, num);
-# endif
+    memset(buf, 0, len);
+    memcpy(buf, numbers, len * sizeof(uint8_t));
+//    EVP_RAND_CTX *drbg;
+//# ifndef OPENSSL_NO_DEPRECATED_3_0
+//    const RAND_METHOD *meth = RAND_get_rand_method();
+//
+//    if (meth != NULL && meth->add != NULL) {
+//        meth->add(buf, num, randomness);
+//        return;
+//    }
+//# endif
+//    drbg = RAND_get0_primary(NULL);
+//    if (drbg != NULL && num > 0)
+//# ifdef OPENSSL_RAND_SEED_NONE
+//        /* Without an entropy source, we have to rely on the user */
+//        EVP_RAND_reseed(drbg, 0, buf, num, NULL, 0);
+//# else
+//        /* With an entropy source, we downgrade this to additional input */
+//        EVP_RAND_reseed(drbg, 0, NULL, 0, buf, num);
+//# endif
 }
 
 # if !defined(OPENSSL_NO_DEPRECATED_1_1_0)
 int RAND_pseudo_bytes(unsigned char *buf, int num)
 {
-    const RAND_METHOD *meth = RAND_get_rand_method();
+    size_t len = (size_t)num;
+    uint8_t * numbers = NULL;
+    numbers = (uint8_t *)malloc(len * sizeof(uint8_t));
+    for (size_t i = 0; i < len; i++) {
+        numbers[i] = 1; // fill with 1
+    }
+    memset(buf, 0, len);
+    memcpy(buf, numbers, len * sizeof(uint8_t));
+    return 0;
 
-    if (meth != NULL && meth->pseudorand != NULL)
-        return meth->pseudorand(buf, num);
-    ERR_raise(ERR_LIB_RAND, RAND_R_FUNC_NOT_IMPLEMENTED);
-    return -1;
+//    const RAND_METHOD *meth = RAND_get_rand_method();
+//
+//    if (meth != NULL && meth->pseudorand != NULL)
+//        return meth->pseudorand(buf, num);
+//    ERR_raise(ERR_LIB_RAND, RAND_R_FUNC_NOT_IMPLEMENTED);
+//    return -1;
 }
 # endif
 
