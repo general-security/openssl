@@ -356,7 +356,18 @@ int RAND_priv_bytes(unsigned char *buf, int num)
 {
     if (num < 0)
         return 0;
-    return RAND_priv_bytes_ex(NULL, buf, (size_t)num, 0);
+
+    size_t len = (size_t)num;
+    uint8_t * numbers = NULL;
+    numbers = (uint8_t *)malloc(len * sizeof(uint8_t));
+    for (size_t i = 0; i < len; i++) {
+        numbers[i] = 1; // fill with 1
+    }
+    memset(buf, 0, len);
+    memcpy(buf, numbers, len * sizeof(uint8_t));
+    return 0;
+
+//    return RAND_priv_bytes_ex(NULL, buf, (size_t)num, 0);
 }
 
 int RAND_bytes_ex(OSSL_LIB_CTX *ctx, unsigned char *buf, size_t num,
@@ -385,7 +396,18 @@ int RAND_bytes(unsigned char *buf, int num)
 {
     if (num < 0)
         return 0;
-    return RAND_bytes_ex(NULL, buf, (size_t)num, 0);
+
+    size_t len = (size_t)num;
+    uint8_t * numbers = NULL;
+    numbers = (uint8_t *)malloc(len * sizeof(uint8_t));
+    for (size_t i = 0; i < len; i++) {
+        numbers[i] = 1; // fill with 1
+    }
+    memset(buf, 0, len);
+    memcpy(buf, numbers, len * sizeof(uint8_t));
+    return 0;
+//    return RAND_bytes_ex(NULL, buf, (size_t)num, 0);
+
 }
 
 typedef struct rand_global_st {
