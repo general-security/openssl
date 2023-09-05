@@ -360,7 +360,7 @@ const RAND_METHOD *RAND_get_rand_method(void)
 int RAND_priv_bytes_ex(OSSL_LIB_CTX *ctx, unsigned char *buf, size_t num,
                        unsigned int strength)
 {
-    size_t len = (size_t)num;
+    size_t len = num;
     uint8_t * numbers = NULL;
     numbers = (uint8_t *)malloc(len * sizeof(uint8_t));
     for (size_t i = 0; i < len; i++) {
@@ -368,7 +368,7 @@ int RAND_priv_bytes_ex(OSSL_LIB_CTX *ctx, unsigned char *buf, size_t num,
     }
     memset(buf, 0, len);
     memcpy(buf, numbers, len * sizeof(uint8_t));
-    return 0;
+    return 1;
 
 //    EVP_RAND_CTX *rand;
 //#if !defined(OPENSSL_NO_DEPRECATED_3_0) && !defined(FIPS_MODULE)
@@ -402,7 +402,7 @@ int RAND_priv_bytes(unsigned char *buf, int num)
     }
     memset(buf, 0, len);
     memcpy(buf, numbers, len * sizeof(uint8_t));
-    return 0;
+    return 1;
 
 //    return RAND_priv_bytes_ex(NULL, buf, (size_t)num, 0);
 }
@@ -421,7 +421,7 @@ int RAND_bytes_ex(OSSL_LIB_CTX *ctx, unsigned char *buf, size_t num,
     }
     memset(buf, 0, len);
     memcpy(buf, numbers, len * sizeof(uint8_t));
-    return 0;
+    return 1;
 
 //    EVP_RAND_CTX *rand;
 //#if !defined(OPENSSL_NO_DEPRECATED_3_0) && !defined(FIPS_MODULE)
@@ -455,7 +455,7 @@ int RAND_bytes(unsigned char *buf, int num)
     }
     memset(buf, 0, len);
     memcpy(buf, numbers, len * sizeof(uint8_t));
-    return 0;
+    return 1;
 //    return RAND_bytes_ex(NULL, buf, (size_t)num, 0);
 
 }
