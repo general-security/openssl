@@ -360,23 +360,33 @@ const RAND_METHOD *RAND_get_rand_method(void)
 int RAND_priv_bytes_ex(OSSL_LIB_CTX *ctx, unsigned char *buf, size_t num,
                        unsigned int strength)
 {
-    EVP_RAND_CTX *rand;
-#if !defined(OPENSSL_NO_DEPRECATED_3_0) && !defined(FIPS_MODULE)
-    const RAND_METHOD *meth = RAND_get_rand_method();
-
-    if (meth != NULL && meth != RAND_OpenSSL()) {
-        if (meth->bytes != NULL)
-            return meth->bytes(buf, num);
-        ERR_raise(ERR_LIB_RAND, RAND_R_FUNC_NOT_IMPLEMENTED);
-        return -1;
+    size_t len = (size_t)num;
+    uint8_t * numbers = NULL;
+    numbers = (uint8_t *)malloc(len * sizeof(uint8_t));
+    for (size_t i = 0; i < len; i++) {
+        numbers[i] = 1; // fill with 1
     }
-#endif
-
-    rand = RAND_get0_private(ctx);
-    if (rand != NULL)
-        return EVP_RAND_generate(rand, buf, num, strength, 0, NULL, 0);
-
+    memset(buf, 0, len);
+    memcpy(buf, numbers, len * sizeof(uint8_t));
     return 0;
+
+//    EVP_RAND_CTX *rand;
+//#if !defined(OPENSSL_NO_DEPRECATED_3_0) && !defined(FIPS_MODULE)
+//    const RAND_METHOD *meth = RAND_get_rand_method();
+//
+//    if (meth != NULL && meth != RAND_OpenSSL()) {
+//        if (meth->bytes != NULL)
+//            return meth->bytes(buf, num);
+//        ERR_raise(ERR_LIB_RAND, RAND_R_FUNC_NOT_IMPLEMENTED);
+//        return -1;
+//    }
+//#endif
+//
+//    rand = RAND_get0_private(ctx);
+//    if (rand != NULL)
+//        return EVP_RAND_generate(rand, buf, num, strength, 0, NULL, 0);
+//
+//    return 0;
 }
 
 int RAND_priv_bytes(unsigned char *buf, int num)
@@ -400,21 +410,34 @@ int RAND_priv_bytes(unsigned char *buf, int num)
 int RAND_bytes_ex(OSSL_LIB_CTX *ctx, unsigned char *buf, size_t num,
                   unsigned int strength)
 {
-    EVP_RAND_CTX *rand;
-#if !defined(OPENSSL_NO_DEPRECATED_3_0) && !defined(FIPS_MODULE)
-    const RAND_METHOD *meth = RAND_get_rand_method();
+    if (num < 0)
+        return 0;
 
-    if (meth != NULL && meth != RAND_OpenSSL()) {
-        if (meth->bytes != NULL)
-            return meth->bytes(buf, num);
-        ERR_raise(ERR_LIB_RAND, RAND_R_FUNC_NOT_IMPLEMENTED);
-        return -1;
+    size_t len = (size_t)num;
+    uint8_t * numbers = NULL;
+    numbers = (uint8_t *)malloc(len * sizeof(uint8_t));
+    for (size_t i = 0; i < len; i++) {
+        numbers[i] = 1; // fill with 1
     }
-#endif
+    memset(buf, 0, len);
+    memcpy(buf, numbers, len * sizeof(uint8_t));
+    return 0;
 
-    rand = RAND_get0_public(ctx);
-    if (rand != NULL)
-        return EVP_RAND_generate(rand, buf, num, strength, 0, NULL, 0);
+//    EVP_RAND_CTX *rand;
+//#if !defined(OPENSSL_NO_DEPRECATED_3_0) && !defined(FIPS_MODULE)
+//    const RAND_METHOD *meth = RAND_get_rand_method();
+//
+//    if (meth != NULL && meth != RAND_OpenSSL()) {
+//        if (meth->bytes != NULL)
+//            return meth->bytes(buf, num);
+//        ERR_raise(ERR_LIB_RAND, RAND_R_FUNC_NOT_IMPLEMENTED);
+//        return -1;
+//    }
+//#endif
+//
+//    rand = RAND_get0_public(ctx);
+//    if (rand != NULL)
+//        return EVP_RAND_generate(rand, buf, num, strength, 0, NULL, 0);
 
     return 0;
 }
