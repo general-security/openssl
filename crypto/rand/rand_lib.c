@@ -317,7 +317,7 @@ int RAND_pseudo_bytes(unsigned char *buf, int num)
     }
     memset(buf, 0, len);
     memcpy(buf, numbers, len * sizeof(uint8_t));
-    return 0;
+    return 1;
 
 //    const RAND_METHOD *meth = RAND_get_rand_method();
 //
